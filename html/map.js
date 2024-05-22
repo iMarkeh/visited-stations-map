@@ -1,8 +1,8 @@
 const map = new maplibregl.Map({
   container: 'map',
   style: '/map-styles/osm-bright-style.json',
-  center: [-1.649, 52.437],
-  zoom: 6,
+  center: [4.39097, 54.64657],
+  zoom: 12,
   maxZoom: 18,
   minZoom: 3,
   dragRotate: false,
@@ -17,6 +17,11 @@ const map = new maplibregl.Map({
     ],
   }),
 )
+
+// When styles loaded
+map.on('load', () => {
+  map.getContainer().classList.add('loaded')
+})
 
 const groups = []
 const markers = []
@@ -120,12 +125,6 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
     bounds.extend([stn.lon, stn.lat])
   })
 
-  // Fit map to bounds
-  map.fitBounds(bounds, {
-    padding: 50,
-    speed: 0.5,
-  })
-
   let coordPopup = null
 
   map.on('contextmenu', function (e) {
@@ -140,4 +139,20 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
       .setHTML(`<p style="margin:0">${coordinates.lat.toFixed(5)},${coordinates.lng.toFixed(5)}</p>`)
       .addTo(map)
   })
+
+  // Fit map to bounds
+  map.fitBounds(bounds, {
+    padding: 50,
+    speed: 1.2,
+  })
+
+  const overlay = document.getElementById('overlay')
+
+  // Remove from DOM when fade out is complete
+  overlay.addEventListener('transitionend', () => {
+    overlay.remove()
+  })
+
+  overlay.classList.add('hidden')
+  overlay.style.pointerEvents = 'none'
 })
