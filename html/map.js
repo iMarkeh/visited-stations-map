@@ -10,7 +10,11 @@ const map = new maplibregl.Map({
   attributionControl: false,
 }).addControl(
   new maplibregl.AttributionControl({
-    customAttribution: '© OpenStreetMap contributors',
+    customAttribution: [
+      `<a href="https://github.com/davwheat/visited-stations-map">View source code</a>`,
+      `Inspired by <a href="https://github.com/t5r7/station-mapper">t5r7's station mapper</a>`,
+      '© OpenStreetMap contributors',
+    ],
   }),
 )
 
