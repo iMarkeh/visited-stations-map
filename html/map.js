@@ -8,11 +8,12 @@ const map = new maplibregl.Map({
   dragRotate: false,
   boxZoom: false,
   attributionControl: false,
-}).addControl(
-  new maplibregl.AttributionControl({
-    customAttribution: '© OpenStreetMap contributors',
-  }),
-)
+})
+  .addControl(
+    new maplibregl.AttributionControl({
+      customAttribution: '© OpenStreetMap contributors',
+    }),
+  )
 
 const groups = []
 const markers = []
@@ -28,6 +29,7 @@ const markers = []
  * @property {string} brand
  * @property {string} countryCode
  * @property {string} countryName
+ * @property {string} type
  */
 
 /**
@@ -57,6 +59,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   year: 'numeric',
 })
 
+const bounds = new maplibregl.LngLatBounds()
+
 document.addEventListener('DOMContentLoaded', async () => {
   const stations = await getData()
 
@@ -69,7 +73,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       .normalize('NFKD')
       .replace(/\p{Diacritic}/gu, '')
       .toLowerCase()
-    const brandBg = `url('/brands/${encodeURIComponent(normalisedBrand)}.svg'), url('/brands/${encodeURIComponent(normalisedBrand)}.png')`
+    const countryCodeEnc = encodeURIComponent(stn.countryCode.toLowerCase())
+    const cleanMode = stn.type.toLowerCase().replace(/[^a-z]/g, '-')
+    const brandBg = cleanMode === 'heritage-railway' ? `url('/brands/steam-train.svg')` : `url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.svg'), url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.png')`
 
     const el = document.createElement('div')
     const iconEl = document.createElement('div')
@@ -77,26 +83,55 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.className = 'station-marker'
     iconEl.className = 'station-icon'
     iconEl.style.backgroundImage = brandBg
+    iconEl.setAttribute('data-mode-type', cleanMode)
 
     el.setAttribute('data-brand', normalisedBrand)
+
+    const popup = new maplibregl.Popup({
+      offset: 25,
+    }).setHTML(
+      `
+<h2 class="name">${nativeName}${stn.stationCode ? ` <span class="code">[${stn.stationCode}]</span>` : ''}</h2>
+${englishName ? `<p class="name-en">${stn.stationNameEnglish}</p>` : ''}
+<p class="country"><img class="country-flag" src="/flags/${countryCodeEnc}.svg"> ${stn.countryName}</p>
+
+<p class="brand"> <span class="brand-icon" style="background-image: ${brandBg}"></span> ${stn.brand}</p>
+
+<p data-mode-type="${cleanMode}" class="type">${stn.type}</p>
+
+${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new Date(stn.visitedDate))}</p>` : ''}
+      `,
+    )
 
     new maplibregl.Marker({
       element: el,
     })
       .setLngLat([stn.lon, stn.lat])
-      .setPopup(
-        new maplibregl.Popup({ offset: 25 }).setHTML(
-          `
-<h2 class="name">${nativeName}${stn.stationCode ? ` <span class="code">[${stn.stationCode}]</span>` : ''}</h2>
-${englishName ? `<p class="name-en">${stn.stationNameEnglish}</p>` : ''}
-<p class="country"><img class="country-flag" src="/flags/${encodeURIComponent(stn.countryCode.toLowerCase())}.svg"> ${stn.countryName}</p>
-
-<p class="brand"> <span class="brand-icon" style="background-image: ${brandBg}"></span> ${stn.brand}</p>
-
-${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new Date(stn.visitedDate))}</p>` : ''}
-          `,
-        ),
-      )
+      .setPopup(popup)
       .addTo(map)
+
+    // Update bounds
+    bounds.extend([stn.lon, stn.lat])
   })
+
+  // Fit map to bounds
+  map.fitBounds(bounds, {
+    padding: 50,
+    speed: 0.5,
+  })
+
+  let coordPopup = null
+
+  map.on('contextmenu', function (e) {
+    var coordinates = e.lngLat;
+
+    if (coordPopup !== null) {
+      coordPopup.remove();
+    }
+
+    coordPopup = new maplibregl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(`<p style="margin:0">${coordinates.lat.toFixed(5)},${coordinates.lng.toFixed(5)}</p>`)
+      .addTo(map);
+  });
 })

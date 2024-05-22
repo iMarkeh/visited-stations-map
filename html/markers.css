@@ -1,29 +1,39 @@
 .station-marker {
-  --icon-size: 16px;
+  --icon-size: 20px;
   --border-size: 2px;
 
   width: var(--icon-size);
   height: var(--icon-size);
 
-  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.station-marker :has(.station-icon:hover) {
+  z-index: 1;
 }
 
 .station-icon {
   width: var(--icon-size);
   height: var(--icon-size);
+  --gap: 1px;
+
+  cursor: pointer;
 
   background-color: white;
   border: var(--border-size) solid var(--type-color, white);
   border-radius: 50%;
 
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+  background-clip: padding-box;
 
   transform-origin: center center;
   transition: transform 0.15s ease-out;
 
   overflow: hidden;
+
+  box-sizing: border-box;
 }
 
 .station-icon:hover {
@@ -100,4 +110,44 @@
   color: #666;
 }
 
+.type {
+  margin: 0;
+  margin-top: 6px;
+  padding: 8px 4px;
+  text-align: center;
+  line-height: 1;
+  background: var(--type-color);
+  color: var(--type-color-fg);
+}
+
 /* Types */
+
+[data-mode-type='heavy-rail'] {
+  --type-color: #f44336;
+  --type-color-fg: white;
+}
+
+[data-mode-type='light-rail'] {
+  --type-color: #34941c;
+  --type-color-fg: white;
+}
+
+[data-mode-type='metro-subway'] {
+  --type-color: #36bde2;
+  --type-color-fg: black;
+}
+
+[data-mode-type='heritage-railway'] {
+  --type-color: #9c4c16;
+  --type-color-fg: white;
+}
+
+[data-mode-type='people-mover'] {
+  --type-color: #9733c2;
+  --type-color-fg: white;
+}
+
+[data-mode-type='ferry-riverboat'] {
+  --type-color: #3949c1;
+  --type-color-fg: white;
+}
