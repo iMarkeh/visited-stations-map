@@ -6,10 +6,10 @@
   height: var(--icon-size);
 
   box-sizing: border-box;
-}
 
-.station-marker :has(.station-icon:hover) {
-  z-index: 1;
+  &:has(.station-icon:hover) {
+    z-index: 1;
+  }
 }
 
 .station-icon {
@@ -34,10 +34,10 @@
   overflow: hidden;
 
   box-sizing: border-box;
-}
 
-.station-icon:hover {
-  transform: scale(1.5);
+  &:hover {
+    transform: scale(1.5);
+  }
 }
 
 /* Popups */
