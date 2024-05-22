@@ -10,7 +10,6 @@ on:
 
 env:
   NODE_VERSION: 20.x
-  CF_PAGES_PROJECT_NAME: visited-stations-map
 
 jobs:
   smoketest:
@@ -69,7 +68,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ env.CF_PAGES_PROJECT_NAME }}
+          projectName: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
           directory: html
           wranglerVersion: '3'
           # Use PR head branch if available, otherwise use the current branch
