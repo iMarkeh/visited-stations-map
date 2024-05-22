@@ -1,0 +1,103 @@
+.station-marker {
+  --icon-size: 16px;
+  --border-size: 2px;
+
+  width: var(--icon-size);
+  height: var(--icon-size);
+
+  cursor: pointer;
+}
+
+.station-icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+
+  background-color: white;
+  border: var(--border-size) solid var(--type-color, white);
+  border-radius: 50%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  transform-origin: center center;
+  transition: transform 0.15s ease-out;
+
+  overflow: hidden;
+}
+
+.station-icon:hover {
+  transform: scale(1.5);
+}
+
+/* Popups */
+
+.maplibregl-popup-content {
+  font-family: 'Radio Canada Big', sans-serif;
+  font-style: normal;
+  font-optical-sizing: auto;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+.name {
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8em;
+  margin-left: 4px;
+}
+
+.name-en {
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.brand,
+.country {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  margin-top: 8px;
+}
+
+.brand-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.country {
+  font-size: 0.85em;
+}
+
+.country-flag {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.visited {
+  margin: 0;
+  padding: 0;
+  margin-top: 8px;
+  color: #666;
+}
+
+/* Types */

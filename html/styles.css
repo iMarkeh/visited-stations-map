@@ -1,0 +1,18 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Radio Canada Big', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  background-color: #262626;
+}
+
+div#map {
+  width: 100vw;
+  height: 100vh;
+}
