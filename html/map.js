@@ -8,12 +8,11 @@ const map = new maplibregl.Map({
   dragRotate: false,
   boxZoom: false,
   attributionControl: false,
-})
-  .addControl(
-    new maplibregl.AttributionControl({
-      customAttribution: '© OpenStreetMap contributors',
-    }),
-  )
+}).addControl(
+  new maplibregl.AttributionControl({
+    customAttribution: '© OpenStreetMap contributors',
+  }),
+)
 
 const groups = []
 const markers = []
@@ -75,7 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       .toLowerCase()
     const countryCodeEnc = encodeURIComponent(stn.countryCode.toLowerCase())
     const cleanMode = stn.type.toLowerCase().replace(/[^a-z]/g, '-')
-    const brandBg = cleanMode === 'heritage-railway' ? `url('/brands/steam-train.svg')` : `url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.svg'), url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.png')`
+    const brandBg =
+      cleanMode === 'heritage-railway'
+        ? `url('/brands/steam-train.svg')`
+        : `url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.svg'), url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.png')`
 
     const el = document.createElement('div')
     const iconEl = document.createElement('div')
@@ -123,15 +125,15 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
   let coordPopup = null
 
   map.on('contextmenu', function (e) {
-    var coordinates = e.lngLat;
+    var coordinates = e.lngLat
 
     if (coordPopup !== null) {
-      coordPopup.remove();
+      coordPopup.remove()
     }
 
     coordPopup = new maplibregl.Popup()
       .setLngLat(coordinates)
       .setHTML(`<p style="margin:0">${coordinates.lat.toFixed(5)},${coordinates.lng.toFixed(5)}</p>`)
-      .addTo(map);
-  });
+      .addTo(map)
+  })
 })
