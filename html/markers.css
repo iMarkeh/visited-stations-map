@@ -7,8 +7,31 @@
 
   box-sizing: border-box;
 
+  transition-property: opacity, display;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  /* https://caniuse.com/mdn-css_properties_display_is_transitionable */
+  transition-behavior: allow-discrete, allow-discrete;
+
+  opacity: 1;
+
   &:has(.station-icon:hover) {
     z-index: 1;
+  }
+
+  /* Enter/Exit transitions when filtering */
+  #map[data-hidden-types*=',heavy-rail,'] &[data-mode-type='heavy-rail'],
+  #map[data-hidden-types*=',light-rail,'] &[data-mode-type='light-rail'],
+  #map[data-hidden-types*=',metro-subway,'] &[data-mode-type='metro-subway'],
+  #map[data-hidden-types*=',heritage-railway,'] &[data-mode-type='heritage-railway'],
+  #map[data-hidden-types*=',people-mover,'] &[data-mode-type='people-mover'],
+  #map[data-hidden-types*=',ferry-riverboat,'] &[data-mode-type='ferry-riverboat'] {
+    display: none !important;
+    opacity: 0 !important;
+  }
+
+  @starting-style {
+    opacity: 0 !important;
   }
 }
 

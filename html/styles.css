@@ -129,7 +129,7 @@ div#map {
 
     .only {
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.1s;
       color: #1759b0;
       text-decoration: underline;
       cursor: pointer;

@@ -169,9 +169,6 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
 
 function setUpFilters() {
   const filterGroup = document.getElementById('filter-group')
-  const styleEl = document.createElement('style')
-  styleEl.id = 'filter-styles'
-  document.head.appendChild(styleEl)
 
   for (const [cleanType, type] of Object.entries(groups)) {
     const input = document.createElement('input')
@@ -209,24 +206,23 @@ function setUpFilters() {
       updateStyles()
     })
   }
+
+  updateStyles()
 }
 
 function updateStyles() {
-  const filterStyles = document.getElementById('filter-styles')
   const filterCheckboxes = document.querySelectorAll('.filter-checkbox')
 
-  let styles = ''
+  const hiddenStyles = []
 
   filterCheckboxes.forEach(checkbox => {
     const cleanType = checkbox.id
     const checked = checkbox.checked
 
-    styles += `
-.station-marker[data-mode-type="${cleanType}"] {
-  display: ${checked ? 'block' : 'none'};
-}
-`
+    if (!checked) {
+      hiddenStyles.push(cleanType)
+    }
   })
 
-  filterStyles.textContent = styles
+  document.getElementById('map').setAttribute('data-hidden-types', `,${hiddenStyles.join(',')},`)
 }
