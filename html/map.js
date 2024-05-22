@@ -24,8 +24,8 @@ map.on('load', () => {
   map.getContainer().classList.add('loaded')
 })
 
-const groups = []
-const markers = []
+/** @type {Record<string, string>} */
+const groups = {}
 
 /**
  * @typedef {Object} Station
@@ -83,21 +83,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/\p{Diacritic}/gu, '')
       .toLowerCase()
     const countryCodeEnc = encodeURIComponent(stn.countryCode.toLowerCase())
-    const cleanMode = stn.type.toLowerCase().replace(/[^a-z]/g, '-')
+    const cleanType = stn.type.toLowerCase().replace(/[^a-z]/g, '-')
     const brandBg =
-      cleanMode === 'heritage-railway'
+      cleanType === 'heritage-railway'
         ? `url('/brands/steam-train.svg')`
         : `url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.svg'), url('/brands/${countryCodeEnc}/${encodeURIComponent(normalisedBrand)}.png')`
 
-    const el = document.createElement('div')
     const iconEl = document.createElement('div')
-    el.appendChild(iconEl)
-    el.className = 'station-marker'
     iconEl.className = 'station-icon'
     iconEl.style.backgroundImage = brandBg
-    iconEl.setAttribute('data-mode-type', cleanMode)
+    iconEl.setAttribute('data-mode-type', cleanType)
 
+    const el = document.createElement('div')
+    el.appendChild(iconEl)
+    el.className = 'station-marker'
+    el.setAttribute('data-mode-type', cleanType)
     el.setAttribute('data-brand', normalisedBrand)
+
+    if (!(cleanType in groups)) {
+      groups[cleanType] = stn.type
+    }
 
     const popup = new maplibregl.Popup({
       offset: 25,
@@ -109,7 +114,7 @@ ${englishName ? `<p class="name-en">${stn.stationNameEnglish}</p>` : ''}
 
 <p class="brand"> <span class="brand-icon" style="background-image: ${brandBg}"></span> ${stn.brand}</p>
 
-<p data-mode-type="${cleanMode}" class="type">${stn.type}</p>
+<p data-mode-type="${cleanType}" class="type">${stn.type}</p>
 
 ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new Date(stn.visitedDate))}</p>` : ''}
       `,
@@ -147,6 +152,8 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
     speed: 1.2,
   })
 
+  setUpFilters()
+
   const overlay = document.getElementById('overlay')
 
   // Remove from DOM when fade out is complete
@@ -157,3 +164,67 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
   overlay.classList.add('hidden')
   overlay.style.pointerEvents = 'none'
 })
+
+function setUpFilters() {
+  const filterGroup = document.getElementById('filter-group')
+  const styleEl = document.createElement('style')
+  styleEl.id = 'filter-styles'
+  document.head.appendChild(styleEl)
+
+  for (const [cleanType, type] of Object.entries(groups)) {
+    const input = document.createElement('input')
+    input.type = 'checkbox'
+    input.className = 'filter-checkbox'
+    input.id = cleanType
+    input.checked = true
+
+    const label = document.createElement('label')
+    label.htmlFor = cleanType
+    label.appendChild(input)
+    label.appendChild(document.createTextNode(` ${type}`))
+
+    const onlyButton = document.createElement('button')
+    onlyButton.textContent = 'only'
+    onlyButton.className = 'only'
+    onlyButton.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.filter-checkbox')
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false
+      })
+
+      input.checked = true
+      updateStyles()
+    })
+
+    const group = document.createElement('div')
+    group.className = 'filter-group-row'
+    group.appendChild(label)
+    group.appendChild(onlyButton)
+
+    filterGroup.appendChild(group)
+
+    input.addEventListener('change', () => {
+      updateStyles()
+    })
+  }
+}
+
+function updateStyles() {
+  const filterStyles = document.getElementById('filter-styles')
+  const filterCheckboxes = document.querySelectorAll('.filter-checkbox')
+
+  let styles = ''
+
+  filterCheckboxes.forEach(checkbox => {
+    const cleanType = checkbox.id
+    const checked = checkbox.checked
+
+    styles += `
+.station-marker[data-mode-type="${cleanType}"] {
+  display: ${checked ? 'block' : 'none'};
+}
+`
+  })
+
+  filterStyles.textContent = styles
+}

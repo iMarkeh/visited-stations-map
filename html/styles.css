@@ -64,3 +64,79 @@ div#map.loaded {
 #overlay.hidden {
   opacity: 0;
 }
+
+/* Filters */
+
+#filter-group {
+  --padding: 8px;
+  --heading-size: 1.1em;
+
+  opacity: 0;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 8px;
+  background: hsla(0, 0%, 100%, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  clip-path: polygon(0 0, 100% 0, 100% calc(2 * var(--padding) + var(--heading-size)), 0 calc(2 * var(--padding) + var(--heading-size)));
+  transition:
+    clip-path 0.4s,
+    opacity 0.4s;
+}
+
+#filter-group:hover,
+#filter-group:focus-within {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+#filter-group h2 {
+  margin: 0;
+  margin-bottom: 4px;
+  font-size: var(--heading-size);
+  line-height: var(--heading-size);
+}
+
+#filter-group label {
+  user-select: none;
+}
+
+#filter-group:not(:has(+ #overlay:not(.hidden))) {
+  opacity: 1;
+}
+
+#filter-group button {
+  appearance: none;
+  border-radius: 0;
+  text-align: inherit;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+
+#filter-group .filter-group-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+#filter-group .filter-group-row .only {
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: #1759b0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#filter-group .filter-group-row:hover .only {
+  opacity: 1;
+}
