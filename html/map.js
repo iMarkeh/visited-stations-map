@@ -1,8 +1,8 @@
 const map = new maplibregl.Map({
   container: 'map',
   // Comment the line below and uncomment the line below that to use the free OSM raster tile service
-  style: '/map-styles/osm-bright-style.json',
-  // style: '/map-styles/osm-raster.json',
+  // style: '/map-styles/osm-bright-style.json',
+  style: '/map-styles/osm-raster.json',
   center: [4.39097, 54.64657],
   zoom: 12,
   maxZoom: 18,
