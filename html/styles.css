@@ -23,6 +23,18 @@ div#map {
   &.loaded {
     opacity: 1;
   }
+
+  .maplibregl-ctrl-attrib {
+    margin-bottom: env(safe-area-inset-bottom);
+
+    &.maplibregl-compact {
+      margin-bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+  }
+
+  .maplibregl-ctrl-bottom-left .maplibregl-ctrl {
+    margin-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
 }
 
 #overlay {
