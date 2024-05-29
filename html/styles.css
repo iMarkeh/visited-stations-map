@@ -15,25 +15,16 @@ body {
 
 div#map {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+
+  margin-top: env(safe-area-inset-top);
+  margin-bottom: env(safe-area-inset-bottom);
 
   opacity: 0;
   transition: opacity 0.5s;
 
   &.loaded {
     opacity: 1;
-  }
-
-  .maplibregl-ctrl-attrib {
-    margin-bottom: env(safe-area-inset-bottom);
-
-    &.maplibregl-compact {
-      margin-bottom: calc(10px + env(safe-area-inset-bottom));
-    }
-  }
-
-  .maplibregl-ctrl-bottom-left .maplibregl-ctrl {
-    margin-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }
 
