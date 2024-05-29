@@ -12,6 +12,24 @@ const map = new maplibregl.Map({
   pitchWithRotate: false,
   boxZoom: false,
   attributionControl: false,
+  hash: true,
+})
+  .addControl(
+    new maplibregl.AttributionControl({
+      customAttribution: [
+        `<a href="https://github.com/davwheat/visited-stations-map">View source code</a>`,
+        `Inspired by <a href="https://github.com/t5r7/station-mapper">t5r7's station mapper</a>`,
+        `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1ZRBE-9i4_WmMmO5h1pIMwrF1owW95Qc-ElLcmf0ct3g/edit">Data source</a>`,
+        '© OpenStreetMap contributors',
+      ],
+    }),
+  )
+  .addControl(
+    new maplibregl.ScaleControl({
+      maxWidth: 140,
+      unit: 'metric',
+    }),
+  )
 
 map.touchZoomRotate.disableRotation()
 
