@@ -137,12 +137,12 @@ ${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new
     new maplibregl.Marker({
       element: el,
     })
-      .setLngLat([stn.lon, stn.lat])
+      .setLngLat([stn.lng, stn.lat])
       .setPopup(popup)
       .addTo(map)
 
     // Update bounds
-    bounds.extend([stn.lon, stn.lat])
+    bounds.extend([stn.lng, stn.lat])
   })
 
   let coordPopup = null

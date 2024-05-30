@@ -12,23 +12,63 @@ async function getSheetContents() {
   return processData(body)
 }
 
+interface StationRecord {
+  'lat/lng': string
+  stationName: string
+  stationNameEnglish: string
+  visitedDate: string
+  countryCode: string
+  stationCode: string
+  brand: string
+  type: string
+}
+
+interface OutputStationRecord {
+  lat: number
+  lng: number
+  stationName: string
+  stationNameEnglish: string
+  visitedDate: string | null
+  countryCode: string
+  countryName: string
+  stationCode: string
+  brand: string
+  type: string
+}
+
 const nameRenderer = new Intl.DisplayNames(['en'], { type: 'region' })
 
 async function processData(data: string) {
-  const records = []
+  const records: OutputStationRecord[] = []
   const parser = csv.parse(data, { columns: true })
   parser.on('readable', function () {
-    let record
+    let record: StationRecord
     while ((record = parser.read()) !== null) {
+      const coords = record['lat/lng'].split(',')
+      const lat = parseFloat(coords[0].trim())
+      const lng = parseFloat(coords[1].trim())
+
+      let countryName: string
       try {
-        record.countryName = nameRenderer.of(record.countryCode)
+        countryName = nameRenderer.of(record.countryCode)
       } catch (e: any) {
-        record.countryName = `Unknown (${record.countryCode})`
+        countryName = `Unknown (${record.countryCode})`
       }
 
-      if (record.visitedDate == '') record.visitedDate = null
+      const visitedDate = record.visitedDate == '' ? null : record.visitedDate
 
-      records.push(record)
+      records.push({
+        lat,
+        lng,
+        countryName,
+        visitedDate,
+        brand: record.brand,
+        countryCode: record.countryCode,
+        stationCode: record.stationCode,
+        stationName: record.stationName,
+        stationNameEnglish: record.stationNameEnglish,
+        type: record.type,
+      })
     }
   })
   await finished(parser)
