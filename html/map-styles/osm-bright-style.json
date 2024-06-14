@@ -1043,10 +1043,10 @@
         ]
       ],
       "paint": {
-        "line-color": "#cba",
+        "line-color": "rgba(204, 187, 170, 0.5)",
         "line-dasharray": [
-          1.5,
-          0.75
+          1,
+          2
         ],
         "line-width": {
           "base": 1.2,
@@ -1417,6 +1417,51 @@
       }
     },
     {
+      "id": "aeroway-area-runway-casing",
+      "type": "line",
+      "metadata": {
+        "mapbox:group": "1444849345966.4436"
+      },
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 12,
+      "filter": [
+        "all",
+        [
+          "in",
+          "class",
+          "runway"
+        ],
+        [
+          "==",
+          "$type",
+          "Polygon"
+        ]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(153, 153, 153, 1)",
+        "line-width": {
+          "base": 1.5,
+          "stops": [
+            [
+              13,
+              0
+            ],
+            [
+              17,
+              10
+            ]
+          ]
+        },
+        "line-opacity": 1
+      }
+    },
+    {
       "id": "aeroway-runway-casing",
       "type": "line",
       "metadata": {
@@ -1431,6 +1476,11 @@
           "in",
           "class",
           "runway"
+        ],
+        [
+          "!=",
+          "$type",
+          "Polygon"
         ]
       ],
       "layout": {
@@ -2150,21 +2200,52 @@
         "all",
         [
           "==",
-          "$type",
+          [
+            "geometry-type"
+          ],
           "LineString"
         ],
         [
           "all",
           [
-            "!in",
-            "brunnel",
-            "bridge",
-            "tunnel"
+            "match",
+            [
+              "get",
+              "brunnel"
+            ],
+            [
+              "bridge",
+              "tunnel"
+            ],
+            false,
+            true
           ],
           [
             "==",
-            "class",
+            [
+              "get",
+              "class"
+            ],
             "path"
+          ],
+          [
+            "all",
+            [
+              "!=",
+              [
+                "get",
+                "subclass"
+              ],
+              "platform"
+            ],
+            [
+              "!=",
+              [
+                "get",
+                "subclass"
+              ],
+              "underground_platform"
+            ]
           ]
         ]
       ],
@@ -2570,6 +2651,87 @@
             ]
           ]
         }
+      }
+    },
+    {
+      "id": "railway-platform",
+      "type": "line",
+      "metadata": {
+        "mapbox:group": "1444849345966.4436"
+      },
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "all",
+        [
+          "==",
+          "subclass",
+          "platform"
+        ]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(255, 213, 202, 1)",
+        "line-width": {
+          "base": 1.2,
+          "stops": [
+            [
+              15,
+              1.2
+            ],
+            [
+              20,
+              4
+            ]
+          ]
+        },
+        "line-blur": 0
+      }
+    },
+    {
+      "id": "railway-platform-underground",
+      "type": "line",
+      "metadata": {
+        "mapbox:group": "1444849345966.4436"
+      },
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "all",
+        [
+          "==",
+          "subclass",
+          "underground_platform"
+        ]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "rgba(172, 137, 107, 0.5)",
+        "line-width": {
+          "base": 1.2,
+          "stops": [
+            [
+              15,
+              1.2
+            ],
+            [
+              20,
+              4
+            ]
+          ]
+        },
+        "line-blur": 0,
+        "line-dasharray": [
+          0.5,
+          2.5
+        ]
       }
     },
     {
