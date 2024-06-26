@@ -12,7 +12,6 @@ const map = new maplibregl.Map({
   pitchWithRotate: false,
   boxZoom: false,
   attributionControl: false,
-  hash: true,
 })
   .addControl(
     new maplibregl.AttributionControl({
