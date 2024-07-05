@@ -34,6 +34,7 @@ interface OutputStationRecord {
   stationCode: string
   brand: string
   type: string
+  isFuture: boolean
 }
 
 const nameRenderer = new Intl.DisplayNames(['en'], { type: 'region' })
@@ -69,6 +70,7 @@ async function processData(data: string) {
         stationName: record.stationName,
         stationNameEnglish: record.stationNameEnglish,
         type: record.type,
+        isFuture: visitedDate != null && new Date(visitedDate) > new Date(),
       })
     }
   })
