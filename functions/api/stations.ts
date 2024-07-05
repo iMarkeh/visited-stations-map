@@ -50,7 +50,8 @@ async function processData(data: string) {
 
       let countryName: string
       try {
-        countryName = nameRenderer.of(record.countryCode)
+        // Split out country code from region code, if present
+        countryName = nameRenderer.of(record.countryCode.split("-")[0])
       } catch (e: any) {
         countryName = `Unknown (${record.countryCode})`
       }
