@@ -143,6 +143,18 @@
   color: var(--type-color-fg);
 }
 
+/* Future stations */
+
+[data-future='true'] {
+  --type-color: #666 !important;
+  --type-color-fg: white !important;
+  filter: grayscale(1);
+}
+
+.to-visit {
+  font-style: italic;
+}
+
 /* Types */
 
 [data-mode-type='heavy-rail'] {

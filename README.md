@@ -6,6 +6,14 @@ Google Sheets-powered map of visited railway stations, inspired by [t5r7's stati
 - Data stored in easily-maintainable Google Sheets
 - Automatically updates map when data changes
 - Uses performant, self-hosted vector OSM tiles with MapLibre GL JS
+- Show transit operator branding
+- Filter by transport type (light/heavy rail, etc.)
+
+## Quirks
+
+By default, stations with a `visitedDate` in the future are hidden from the map. These can be shown by pressing the "Show future stations" link
+at the bottom of the webpage, or by adding `?future=true` to the URL. When shown, these will appear in greyscale and state "Planned to visit" in
+their information pop-up.
 
 ## Local development
 

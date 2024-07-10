@@ -34,6 +34,7 @@ interface OutputStationRecord {
   stationCode: string
   brand: string
   type: string
+  isFuture: boolean
 }
 
 const nameRenderer = new Intl.DisplayNames(['en'], { type: 'region' })
@@ -50,7 +51,8 @@ async function processData(data: string) {
 
       let countryName: string
       try {
-        countryName = nameRenderer.of(record.countryCode)
+        // Split out country code from region code, if present
+        countryName = nameRenderer.of(record.countryCode.split('-')[0])
       } catch (e: any) {
         countryName = `Unknown (${record.countryCode})`
       }
@@ -68,6 +70,7 @@ async function processData(data: string) {
         stationName: record.stationName,
         stationNameEnglish: record.stationNameEnglish,
         type: record.type,
+        isFuture: visitedDate != null && new Date(visitedDate) > new Date(),
       })
     }
   })

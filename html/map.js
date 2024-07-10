@@ -1,3 +1,11 @@
+const showFuture = new URLSearchParams(window.location.search).has('future')
+const swapUrl = new URL(window.location.href)
+if (showFuture) {
+  swapUrl.searchParams.delete('future')
+} else {
+  swapUrl.searchParams.set('future', 'true')
+}
+
 const map = new maplibregl.Map({
   container: 'map',
   // Comment the line below and uncomment the line below that to use the free OSM raster tile service
@@ -12,11 +20,11 @@ const map = new maplibregl.Map({
   pitchWithRotate: false,
   boxZoom: false,
   attributionControl: false,
-  hash: true,
 })
   .addControl(
     new maplibregl.AttributionControl({
       customAttribution: [
+        `<a href="${swapUrl.toString()}">${showFuture ? 'Hide' : 'Show'} future stations</a>`,
         `<a href="https://github.com/davwheat/visited-stations-map">View source code</a>`,
         `Inspired by <a href="https://github.com/t5r7/station-mapper">t5r7's station mapper</a>`,
         `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1ZRBE-9i4_WmMmO5h1pIMwrF1owW95Qc-ElLcmf0ct3g/edit">Data source</a>`,
@@ -53,6 +61,7 @@ const groups = {}
  * @property {string} countryCode
  * @property {string} countryName
  * @property {string} type
+ * @property {boolean} isFuture
  */
 
 /**
@@ -91,6 +100,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nativeName = stn.stationName
     const englishName = stn.stationNameEnglish || null
 
+    if (stn.isFuture && !showFuture) {
+      return
+    }
+
     // https://stackoverflow.com/a/37511463
     const normalisedBrand = stn.brand
       .normalize('NFKD')
@@ -113,6 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.className = 'station-marker'
     el.setAttribute('data-mode-type', cleanType)
     el.setAttribute('data-brand', normalisedBrand)
+    el.setAttribute('data-future', stn.isFuture)
 
     if (!(cleanType in groups)) {
       groups[cleanType] = stn.type
@@ -130,7 +144,7 @@ ${englishName ? `<p class="name-en">${stn.stationNameEnglish}</p>` : ''}
 
 <p data-mode-type="${cleanType}" class="type">${stn.type}</p>
 
-${stn.visitedDate ? `<p class="visited">First visited ${dateFormatter.format(new Date(stn.visitedDate))}</p>` : ''}
+${stn.visitedDate ? `<p class="visited ${stn.isFuture ? 'to-visit' : ''}">${stn.isFuture ? 'Planned to visit' : 'First visited'} ${dateFormatter.format(new Date(stn.visitedDate))}</p>` : ''}
       `,
     )
 
